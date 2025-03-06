@@ -1,0 +1,31 @@
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    background-color: #fff;
+    padding: 10px;
+  }
+  
+  .nav-link {
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+    padding-bottom: 5px;
+    position: relative;
+  }
+  
+  .nav-link.active {
+    color: #d81b60; /* Dark Pink */
+  }
+  
+  .nav-link.active::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: #d81b60; /* Dark Pink */
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+  }
+  
