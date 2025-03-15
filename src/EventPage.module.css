@@ -1,0 +1,160 @@
+/* General Page Styling */
+.eventContainer {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Section Styling */
+.eventSection {
+  margin-bottom: 40px;
+}
+
+.eventSection h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Event List - Grid Layout */
+.eventList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 cards in a row */
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Event Card */
+.eventCard {
+  background: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+  transform-style: preserve-3d; /* For flip animation */
+}
+
+.eventCard:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  filter: grayscale(0%);
+}
+
+/* Event Image */
+.eventImage {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.eventCard:hover .eventImage {
+  transform: scale(1.05);
+}
+
+/* Event Title */
+.eventTitle {
+  font-size: 1.5rem;
+  color: #222;
+  margin: 15px 0;
+  font-weight: bold;
+}
+
+/* Event Details */
+.eventDetails {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+/* Event Description */
+.eventDescription {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 15px;
+}
+
+/* Register Button */
+.registerBtn {
+  display: inline-block;
+  background: #ff6600;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.registerBtn:hover {
+  background: #e65c00;
+}
+
+/* No Events Message */
+.noEvents {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #888;
+}
+
+.closingSoon {
+  color: red;
+  font-weight: bold;
+}
+
+/* Event Status */
+.eventStatus {
+  color: green;
+  font-weight: bold;
+}
+
+/* Event Subtitle */
+.eventSubtitle {
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .eventList {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards in a row for smaller screens */
+  }
+
+  .eventCard {
+    padding: 15px;
+  }
+
+  .eventTitle {
+    font-size: 1.3rem;
+  }
+
+  .eventDetails {
+    font-size: 0.9rem;
+  }
+
+  .eventDescription {
+    font-size: 0.9rem;
+  }
+
+  .registerBtn {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .eventList {
+    grid-template-columns: 1fr; /* 1 card in a row for very small screens */
+  }
+}

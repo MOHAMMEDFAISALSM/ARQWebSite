@@ -1,142 +1,292 @@
-.gallery{
-    -webkit-column-count: 3;
-    -moz-column-count: 3;
-    column-count: 3;
-    -webkit-column-width: 33%;
-    -moz-column-width: 33%;
-    column-width: 33%;
-    padding: 0 12px;
+/* General Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.gallery .pics{
-    -webkit-transition: all 350ms ease;
-    transition: all 350ms ease;
-    cursor: pointer;
-    margin-bottom: 12px;
-}
-.gallery .pics:hover{
-    filter: opacity(.8);
-}
-@media(max-width:991px){
-    -webkit-column-count: 2;
-    -moz-column-count: 2;
-    column-count: 2;
-}
-@media(max-width:480px){
-    -webkit-column-count: 1;
-    -moz-column-count: 1;
-    column-count: 1;
-    -webkit-column-width: 100%;
-    -moz-column-width: 100%;
-    column-width: 100%;
-    padding: 0 12px;
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: "PP Neue Montreal", sans-serif;
+  background-color: #0f0f0f;
+  color: #fff;
+  overflow: auto; /* Enable scrolling */
 }
 
-/*model*/
-.model{
-    width:100%;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #000000;
-    transition: opacity .4s ease, visibility .4s ease, transform .5s ease-in-out;
-    visibility:hidden;
-    opacity: 0;
-    transform: scale(0);
-    overflow: hidden;
-    z-index: 999;
-}
-
-.model.open{
-    visibility: visible;
-    opacity: 1;
-    transform: scale(1);
-}
-
-.model img{
-    width: auto;
-    max-width: 100%;
-    height: auto;
-    max-height: 100%;
-    display: block;
-    line-height: 0;
-    box-sizing: border-box;
-    padding: 20px 0 20px;
-    margin: 0 auto;
-}
-
-.model.open svg{
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 2rem;
-    height: 2rem;
-    padding: 5px;
-    background-color: rgba(0,0,0,0.4);
-    color: #ffffff;
-    cursor: pointer;
-}
-/* Centering the text */
+/* Gallery Title */
 .gallery-title {
-    text-align: center;
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-top: 20px;
-    opacity: 0;
-    animation: fadeIn 2s ease-in-out forwards;
+  text-align: center;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-top: 20px;
+  opacity: 0;
+  animation: fadeIn 2s ease-in-out forwards;
+  background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rgbFlow 10s linear infinite, fadeIn 2s ease-in-out forwards;
+}
+
+/* ARQ Title */
+.arq-title {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: bold;
+  width: 100%;
+  padding: 20px 0;
+  color: white;
+  text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.8);
+  position: relative;
+  overflow: hidden;
+}
+
+.arq-letter {
+  display: inline-block;
+  animation: sparkle 1s infinite alternate;
+}
+
+@keyframes sparkle {
+  0% { color: red; transform: scale(1); }
+  25% { color: orange; }
+  50% { color: yellow; }
+  75% { color: green; }
+  100% { color: blue; transform: scale(1.1); }
+}
+
+/* Moments Title with Racing Line RGB Effect */
+.moments-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 10px;
+  opacity: 0;
+  animation: fadeIn 2s ease-in-out forwards;
+  background: linear-gradient(
+    90deg,
+    red,
+    orange,
+    yellow,
+    green,
+    cyan,
+    blue,
+    violet,
+    red
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: racingLine 5s linear infinite, fadeIn 2s ease-in-out forwards;
+}
+
+/* Racing Line Animation */
+@keyframes racingLine {
+  0% {
+    background-position: 100% 0;
   }
-  
-  /* ARQ Galleries Styling */
-  .arq-title {
-    text-align: center;
-    font-size: 3rem;
-    font-weight: bold;
-    width: 100%;
-    padding: 20px 0;
-    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
-    background-size: 400% 400%;
-    animation: rgbFlow 10s linear infinite, fadeIn 2s ease-in-out forwards;
-    color: white;
-    text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.8);
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
-    position: relative;
-    overflow: hidden;
+  100% {
+    background-position: -100% 0;
   }
-  
-  /* Sparkle Effect */
-  .arq-title::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: url("https://i.imgur.com/2hPFHhN.png") repeat;
-    mix-blend-mode: overlay;
-    opacity: 0.5;
-    animation: sparkle 1s infinite alternate;
+}
+
+/* Fade-in Effect */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(-50px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Slider Styles */
+.slider {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.background-images {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.background-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.background-image.active {
+  opacity: 1;
+}
+
+.card {
+  position: absolute;
+  top: 40%; /* Adjusted to move the card up */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 700px;
+  height: auto;
+  min-height: 500px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  transform-style: preserve-3d;
+}
+
+.card-image {
+  width: 100%;
+  height: 60%;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+
+.card-content {
+  width: 100%;
+  height: 40%;
+  padding: 10px;
+  overflow-y: visible;
+}
+
+.card-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.card-description {
+  font-size: 18px;
+  color: #ccc;
+  line-height: 1.5;
+}
+
+.side-preview {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20%;
+  max-width: 250px;
+  height: 30%;
+  max-height: 200px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.side-preview.left {
+  left: 10px;
+}
+
+.side-preview.right {
+  right: 10px;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slider-counter {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  color: #fff;
+  z-index: 3;
+}
+/* Media Queries for Responsiveness */
+@media (max-width: 848px) {
+  .side-preview {
+    width: 15%; /* Smaller width for medium screens */
+    height: 20%; /* Smaller height for medium screens */
+    max-width: 150px; /* Limit maximum width */
+    max-height: 150px; /* Limit maximum height */
   }
-  
-  /* Keyframes for RGB Flow */
-  @keyframes rgbFlow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+
+  .side-preview.left {
+    left: 5px; /* Move closer to the edge */
   }
-  
-  /* Sparkle Animation */
-  @keyframes sparkle {
-    0% { opacity: 0.3; transform: scale(1); }
-    100% { opacity: 0.7; transform: scale(1.1); }
+
+  .side-preview.right {
+    right: 5px; /* Move closer to the edge */
   }
-  
-  /* Fade-in Effect */
-  @keyframes fadeIn {
-    0% { opacity: 0; transform: translateY(-50px); }
-    100% { opacity: 1; transform: translateY(0); }
+
+  .card {
+    width: 80%; /* Smaller card for medium screens */
+    min-height: 400px; /* Adjust height */
   }
-  
+
+  .card-image {
+    height: 50%; /* Adjust image height */
+  }
+
+  .card-content {
+    height: 50%; /* Adjust content height */
+  }
+}
+
+@media (max-width: 480px) {
+  .side-preview {
+    width: 20%; /* Wider for very small screens */
+    height: 15%; /* Shorter for very small screens */
+    max-width: 100px; /* Limit maximum width */
+    max-height: 100px; /* Limit maximum height */
+  }
+
+  .side-preview.left {
+    left: 2px; /* Move even closer to the edge */
+  }
+
+  .side-preview.right {
+    right: 2px; /* Move even closer to the edge */
+  }
+
+  .card {
+    width: 90%; /* Wider card for very small screens */
+    min-height: 300px; /* Smaller height for very small screens */
+  }
+
+  .card-image {
+    height: 40%; /* Adjust image height */
+  }
+
+  .card-content {
+    height: 60%; /* Adjust content height */
+  }
+
+  .card-title {
+    font-size: 20px; /* Smaller font size for very small screens */
+  }
+
+  .card-description {
+    font-size: 14px; /* Smaller font size for very small screens */
+  }
+}
+.preview-image.grayscale {
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+/* Ensure the current image is in color */
+.card-image {
+  filter: grayscale(0%);
+  transition: filter 0.3s ease;
+}

@@ -38,3 +38,60 @@ function App() {
 }
 
 export default App;
+/* import React, { useState, useEffect } from "react";
+import { addEvent, getEvents, updateEvent, deleteEvent } from "./firebaseFunctions";
+
+const App = () => {
+  const [events, setEvents] = useState([]);
+  const [newEvent, setNewEvent] = useState({ title: "", type: "", date: "", venue: "", description: "", eventStatus: "" });
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    const data = await getEvents();
+    setEvents(data);
+  };
+
+  const handleAddEvent = async () => {
+    if (!image) return alert("Please select an image!");
+    await addEvent(newEvent, image);
+    fetchEvents();
+  };
+
+  return (
+    <div>
+      <h1>Event Manager</h1>
+      <input type="text" placeholder="Title" onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })} />
+      <input type="text" placeholder="Type" onChange={(e) => setNewEvent({ ...newEvent, type: e.target.value })} />
+      <input type="datetime-local" onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })} />
+      <input type="text" placeholder="Venue" onChange={(e) => setNewEvent({ ...newEvent, venue: e.target.value })} />
+      <textarea placeholder="Description" onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })} />
+      <select onChange={(e) => setNewEvent({ ...newEvent, eventStatus: e.target.value })}>
+        <option value="Upcoming">Upcoming</option>
+        <option value="Ongoing">Ongoing</option>
+        <option value="Completed">Completed</option>
+      </select>
+      <input type="file" onChange={(e) => setImage(e.target.files[0])} />
+      <button onClick={handleAddEvent}>Add Event</button>
+
+      <h2>Events List</h2>
+      <ul>
+        {events.map((event) => (
+          <li key={event.id}>
+            <h3>{event.title}</h3>
+            <img src={event.image} alt={event.title} width="100" />
+            <p>{event.description}</p>
+            <button onClick={() => updateEvent(event.id, { eventStatus: "Completed" })}>Mark as Completed</button>
+            <button onClick={() => deleteEvent(event.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default App;
+ */
