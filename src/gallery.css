@@ -122,19 +122,22 @@ html, body {
   transition: opacity 1s ease-in-out;
 }
 
+/* Blurred Background for Current Image */
 .background-image.active {
   opacity: 1;
+  backdrop-filter: blur(5px); /* Light blur effect */
+  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black overlay */
 }
 
 .card {
   position: absolute;
-  top: 40%; /* Adjusted to move the card up */
+  top: 45%; /* Adjusted to move the card down slightly */
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90%;
-  max-width: 700px;
+  max-width: 750px; /* Slightly larger frame */
   height: auto;
-  min-height: 500px;
+  min-height: 550px; /* Slightly larger frame */
   background-color: rgba(0, 0, 0, 0.8);
   border-radius: 10px;
   overflow: hidden;
@@ -153,6 +156,9 @@ html, body {
   height: 60%;
   object-fit: cover;
   border-radius: 10px 10px 0 0;
+  filter: grayscale(0%);
+  transition: filter 0.3s ease;
+  z-index: 2; /* Ensure the image is above the blurred background */
 }
 
 .card-content {
@@ -212,6 +218,7 @@ html, body {
   color: #fff;
   z-index: 3;
 }
+
 /* Media Queries for Responsiveness */
 @media (max-width: 848px) {
   .side-preview {
@@ -280,13 +287,18 @@ html, body {
     font-size: 14px; /* Smaller font size for very small screens */
   }
 }
+
 .preview-image.grayscale {
   filter: grayscale(100%);
   transition: filter 0.3s ease;
 }
 
-/* Ensure the current image is in color */
-.card-image {
-  filter: grayscale(0%);
-  transition: filter 0.3s ease;
+.no-images-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.5rem;
+  color: #888;
+  text-align: center;
 }

@@ -1,4 +1,5 @@
-import { db, storage, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, ref, uploadBytes, getDownloadURL } from "./firebase/firebaseconfig";
+// src/firebaseFunctions.js
+import { db, storage, collection, addDoc, ref, uploadBytes, getDownloadURL } from "./firebase/firebaseConfig";
 
 // 🔹 Reference to Firestore Collection
 const eventsCollection = collection(db, "events");

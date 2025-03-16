@@ -1,6 +1,8 @@
-import { db } from "./firebaseConfig";
+// src/firebase/eventservice.js
+import { db } from "./firebaseConfig"; 
 import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 
+// 🔹 Reference to Firestore Collection
 const eventsCollection = collection(db, "events");
 
 // 🔹 Function to Fetch All Events
