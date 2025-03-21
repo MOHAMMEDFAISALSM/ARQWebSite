@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { motion, useAnimation } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import styles from "./EventPage.module.css";
-import { getEvents } from "./firebase/eventservice"; // Import the getEvents function
+import { getEvents } from "./firebase/eventservice";
+import { FaSearch } from "react-icons/fa";
 
 const EventPage = () => {
   const [events, setEvents] = useState([]);
@@ -12,62 +13,136 @@ const EventPage = () => {
   const [completedEvents, setCompletedEvents] = useState([]);
   const [timers, setTimers] = useState({});
   const [showAnimation, setShowAnimation] = useState(true);
-  const controls = useAnimation();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("all");
+  const [showFinalText, setShowFinalText] = useState(false); // State for Gallery animation
 
+  // Ref for scroll-triggered animations
+  const eventCardsRef = useRef([]);
+
+  // Shower Effect
   useEffect(() => {
-    setTimeout(() => setShowAnimation(false), 10000);
+    const createShowerEffect = () => {
+      const showerContainer = document.createElement("div");
+      showerContainer.className = styles.showerContainer;
+
+      for (let i = 0; i < 100; i++) {
+        const shower = document.createElement("div");
+        shower.className = styles.shower;
+        shower.style.left = `${Math.random() * 100}vw`;
+        shower.style.animationDelay = `${Math.random() * 5}s`;
+        shower.style.animationDuration = `${2 + Math.random() * 3}s`;
+        showerContainer.appendChild(shower);
+      }
+
+      document.body.appendChild(showerContainer);
+
+      // Remove the shower effect after 5 seconds
+      setTimeout(() => {
+        showerContainer.remove();
+      }, 5000);
+    };
+
+    createShowerEffect();
   }, []);
 
-  // Fetch events from Firestore on component mount
+  // Stop the Gallery rotating effect after 5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowFinalText(true);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Scroll-triggered animations
+  useEffect(() => {
+    const handleScrollAnimation = () => {
+      eventCardsRef.current.forEach((el) => {
+        if (el) {
+          const elementTop = el.getBoundingClientRect().top;
+          if (elementTop <= window.innerHeight * 0.75) {
+            el.classList.add(styles.visible);
+          }
+        }
+      });
+    };
+
+    window.addEventListener("scroll", handleScrollAnimation);
+    handleScrollAnimation(); // Initial check
+
+    return () => {
+      window.removeEventListener("scroll", handleScrollAnimation);
+    };
+  }, [events]); // Re-run when events change
+
+  // Fetch events
   useEffect(() => {
     const fetchEvents = async () => {
       const fetchedEvents = await getEvents();
-      // Convert the `date` field from string to Date object
-      const eventsWithDateObjects = fetchedEvents.map((event) => ({
-        ...event,
-        date: new Date(event.date), // Convert string to Date object
-      }));
-      console.log("Fetched Events with Date Objects:", eventsWithDateObjects); // Debugging
+      const eventsWithDateObjects = fetchedEvents.map((event) => {
+        let date;
+        if (event.date && typeof event.date.toDate === "function") {
+          date = event.date.toDate();
+        } else if (typeof event.date === "string") {
+          date = new Date(event.date);
+        } else if (event.date instanceof Date) {
+          date = event.date;
+        } else {
+          console.error("Invalid date for event:", event.title, event.date);
+          date = new Date();
+        }
+        return {
+          ...event,
+          date: date,
+        };
+      });
       setEvents(eventsWithDateObjects);
     };
-
     fetchEvents();
   }, []);
 
-  // Update event statuses and timers every second
+  // Update timers
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date().getTime();
-      let updatedEvents = [...events];
-      let newTimers = {};
-  
-      updatedEvents.forEach((event) => {
-        const eventTime = event.date.getTime(); // Use the Date object
-        const timeLeft = eventTime - now;
-        console.log("Event:", event.title, "Time Left:", timeLeft); // Debugging
-  
-        if (timeLeft <= 0) {
-          // Event has started or completed
-          if (event.eventStatus === "Upcoming") {
-            event.eventStatus = "Ongoing";
-          } else if (event.eventStatus === "Ongoing" && timeLeft <= -86400000) {
-            // If the event has been ongoing for more than 24 hours, mark it as completed
-            event.eventStatus = "Completed";
+      setEvents((prevEvents) => {
+        return prevEvents.map((event) => {
+          if (!event.date || !(event.date instanceof Date)) {
+            return event;
           }
-        } else {
-          // Event is still upcoming
-          newTimers[event.title] = formatTime(timeLeft);
-        }
+          const eventTime = event.date.getTime();
+          const timeLeft = eventTime - now;
+          if (timeLeft <= 0) {
+            if (event.eventStatus === "Upcoming") {
+              event.eventStatus = "Ongoing";
+            } else if (event.eventStatus === "Ongoing" && timeLeft <= -129600000) {
+              event.eventStatus = "Completed";
+            }
+          }
+          return event;
+        });
       });
-  
-      console.log("New Timers:", newTimers); // Debugging
-      setTimers(newTimers);
-      setEvents(updatedEvents);
+
+      setTimers((prevTimers) => {
+        const newTimers = {};
+        events.forEach((event) => {
+          if (event.date && event.date instanceof Date) {
+            const eventTime = event.date.getTime();
+            const timeLeft = eventTime - now;
+            if (timeLeft > 0) {
+              newTimers[event.title] = formatTime(timeLeft);
+            }
+          }
+        });
+        return newTimers;
+      });
     }, 1000);
-  
+
     return () => clearInterval(interval);
   }, [events]);
-  // Categorize events into sections
+
+  // Categorize events
   useEffect(() => {
     setOngoingEvents(events.filter((event) => event.eventStatus === "Ongoing"));
     setUpcomingTechnical(events.filter((event) => event.eventStatus === "Upcoming" && event.type === "Technical"));
@@ -75,7 +150,6 @@ const EventPage = () => {
     setCompletedEvents(events.filter((event) => event.eventStatus === "Completed"));
   }, [events]);
 
-  // Format time left for upcoming events
   const formatTime = (timeLeft) => {
     const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
     const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -83,88 +157,187 @@ const EventPage = () => {
     const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
     return `${String(days).padStart(2, "0")}d ${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m ${String(seconds).padStart(2, "0")}s`;
   };
-  // Render each event card
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+    const section = document.getElementById(tab);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const renderEvent = (event, index) => {
-    const timeLeft = timers[event.title] || "Calculating...";
-    console.log("Event:", event.title, "Time Left:", timeLeft); // Debugging
-    const isClosingSoon = timeLeft.startsWith("00d");
-  
+    if (!event.date || !(event.date instanceof Date)) {
+      return null;
+    }
+    const timeLeft = timers[event.title];
+    const eventTime = event.date.getTime();
+    const now = new Date().getTime();
+    const isClosingSoon = eventTime - now <= 86400000;
+
     return (
       <motion.div
         key={index}
-        className={styles.eventCard}
+        className={`${styles.eventCard} ${styles.scrollAnimation}`}
+        ref={(el) => (eventCardsRef.current[index] = el)}
         whileHover={{ scale: 1.05 }}
-        initial={{ opacity: 0, rotateY: 90 }}
-        whileInView={{ opacity: 1, rotateY: 0 }}
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: index * 0.2 }}
         viewport={{ once: true }}
       >
-        <img src={event.image} alt={event.title} className={styles.eventImage} />
-        <h3 className={styles.eventTitle}>{event.title}</h3>
-        <p className={styles.eventDetails}>📅 {event.date.toLocaleDateString()} | 📍 {event.venue}</p>
-        <p className={styles.eventDescription}>{event.description}</p>
-        {event.eventStatus === "Upcoming" ? (
-          <p className={`${styles.eventTimer} ${isClosingSoon ? styles.closingSoon : ""}`}>
-            {isClosingSoon ? `⚠️ Register fast! Closing in ${timeLeft}` : `Register ends in: ${timeLeft}`}
-          </p>
-        ) : (
-          <p className={styles.eventStatus}>{event.eventStatus === "Ongoing" ? "Event is ongoing" : "Event completed"}</p>
-        )}
-        {event.eventStatus === "Upcoming" && <Link to="/register" className={styles.registerBtn}>Register</Link>}
+        <div className={styles.eventImageContainer}>
+          <img src={event.image} alt={event.title} className={styles.eventImage} />
+        </div>
+        <div className={styles.eventContent}>
+          <h3 className={styles.eventTitle}>{event.title}</h3>
+          <p className={styles.eventDetails}>📅 {event.date.toLocaleDateString()} | 📍 {event.venue}</p>
+          <p className={styles.eventDescription}>{event.description}</p>
+          {event.eventStatus === "Upcoming" && (
+            <p className={`${styles.eventTimer} ${isClosingSoon ? styles.closingSoon : ""}`}>
+              {timeLeft ? `Event starts in: ${timeLeft}` : "Event closed"}
+            </p>
+          )}
+          {event.eventStatus === "Ongoing" && (
+            <p className={styles.eventStatus}>Event is ongoing</p>
+          )}
+          {event.eventStatus === "Completed" && (
+            <p className={styles.eventStatus}>Event completed</p>
+          )}
+          {event.eventStatus === "Upcoming" && (
+            <Link to="/register" className={styles.registerBtn}>
+              Register
+            </Link>
+          )}
+        </div>
       </motion.div>
     );
   };
 
-  // Render a message if no events are available
   const renderNoEventsMessage = (category) => {
-    return (
-      <div className={styles.noEventsMessage}>
-        No {category} events available.
-      </div>
-    );
+    return <div className={styles.noEventsMessage}>No {category} events available.</div>;
   };
 
   return (
     <div className={styles.eventContainer}>
-      {/* Animated Header */}
-      <motion.div className={`${styles.eventHeader} ${showAnimation ? styles.rainbowGlow : ""}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }}>
+      {/* Shower Effect (already handled in useEffect) */}
+
+      {/* Gallery Component */}
+      <div className={styles.galleryContainer}>
+        {!showFinalText ? (
+          <motion.div
+            className={styles.rotatingWheel}
+            animate={{
+              rotate: [0, 360], // Rotate 360 degrees
+              scale: [1, 1.5, 2], // Grow in size
+              opacity: [1, 1, 0], // Fade out
+              filter: ["brightness(1)", "brightness(2)"], // Glow effect
+            }}
+            transition={{ duration: 5, ease: "easeInOut" }}
+          >
+            ARQ CLUB EVENTS
+            {/* Sparks */}
+            <motion.div
+              className={styles.spark}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+            />
+            <motion.div
+              className={styles.spark}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 1 }}
+            />
+            <motion.div
+              className={styles.spark}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 1.5 }}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            className={styles.finalText}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            ARQ CLUB EVENTS
+          </motion.div>
+        )}
+      </div>
+
+      {/* ARQ Event Management Header */}
+      <motion.div
+        className={`${styles.eventHeader} ${showAnimation ? styles.rainbowGlow : ""}`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 2 }}
+      >
         ARQ Event Management
       </motion.div>
 
-      <section className={styles.eventSection}>
+      <div className={styles.navigation}>
+        <div className={styles.searchBar}>
+          <FaSearch />
+          <input
+            type="text"
+            placeholder="Search events..."
+            value={searchQuery}
+            onChange={handleSearch}
+          />
+        </div>
+        <div className={styles.tabs}>
+          <button onClick={() => handleTabClick("upcoming")}>Upcoming</button>
+          <button onClick={() => handleTabClick("ongoing")}>Ongoing</button>
+          <button onClick={() => handleTabClick("completed")}>Completed</button>
+        </div>
+      </div>
+
+      <section id="upcoming" className={styles.eventSection}>
         <h2>Upcoming Events</h2>
-        
-        {/* Technical Events Section */}
         <h3 className={styles.eventSubtitle}>Technical Events</h3>
         <div className={styles.eventList}>
           {upcomingTechnical.length > 0
-            ? upcomingTechnical.map((event, index) => renderEvent(event, index))
+            ? upcomingTechnical
+                .filter((event) => event.title.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map((event, index) => renderEvent(event, index))
             : renderNoEventsMessage("upcoming technical")}
         </div>
-        
-        {/* Non-Technical Events Section */}
+
         <h3 className={styles.eventSubtitle}>Non-Technical Events</h3>
         <div className={styles.eventList}>
           {upcomingNonTechnical.length > 0
-            ? upcomingNonTechnical.map((event, index) => renderEvent(event, index))
+            ? upcomingNonTechnical
+                .filter((event) => event.title.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map((event, index) => renderEvent(event, index))
             : renderNoEventsMessage("upcoming non-technical")}
         </div>
       </section>
 
-      <section className={styles.eventSection}>
+      <section id="ongoing" className={styles.eventSection}>
         <h2>Ongoing Events</h2>
         <div className={styles.eventList}>
           {ongoingEvents.length > 0
-            ? ongoingEvents.map((event, index) => renderEvent(event, index))
+            ? ongoingEvents
+                .filter((event) => event.title.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map((event, index) => renderEvent(event, index))
             : renderNoEventsMessage("ongoing")}
         </div>
       </section>
 
-      <section className={styles.eventSection}>
+      <section id="completed" className={styles.eventSection}>
         <h2>Completed Events</h2>
         <div className={styles.eventList}>
           {completedEvents.length > 0
-            ? completedEvents.map((event, index) => renderEvent(event, index))
+            ? completedEvents
+                .filter((event) => event.title.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map((event, index) => renderEvent(event, index))
             : renderNoEventsMessage("completed")}
         </div>
       </section>

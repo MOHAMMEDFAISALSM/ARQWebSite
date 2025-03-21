@@ -104,31 +104,10 @@ html, body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  background-color: #000; /* Black and white background */
 }
 
-.background-images {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-.background-image {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-}
-
-/* Blurred Background for Current Image */
-.background-image.active {
-  opacity: 1;
-  backdrop-filter: blur(5px); /* Light blur effect */
-  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black overlay */
-}
-
+/* Card Layout */
 .card {
   position: absolute;
   top: 45%; /* Adjusted to move the card down slightly */
@@ -138,7 +117,7 @@ html, body {
   max-width: 750px; /* Slightly larger frame */
   height: auto;
   min-height: 550px; /* Slightly larger frame */
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(255, 255, 255, 0.1); /* Light background for the card */
   border-radius: 10px;
   overflow: hidden;
   z-index: 2;
@@ -172,14 +151,16 @@ html, body {
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 10px;
+  color: #fff; /* White text */
 }
 
 .card-description {
   font-size: 18px;
-  color: #ccc;
+  color: #ccc; /* Light gray text */
   line-height: 1.5;
 }
 
+/* Side Previews */
 .side-preview {
   position: absolute;
   top: 50%;
@@ -207,8 +188,44 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: grayscale(100%); /* Black and white effect */
+  transition: filter 0.3s ease;
 }
 
+.preview-image:hover {
+  filter: grayscale(0%); /* Restore color on hover */
+}
+
+/* Thumbnails */
+.thumbnails {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 3;
+}
+
+.thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+  filter: grayscale(100%); /* Black and white effect */
+  transition: filter 0.3s ease;
+}
+
+.thumbnail.active {
+  filter: grayscale(0%); /* Restore color for active thumbnail */
+}
+
+.thumbnail:hover {
+  filter: grayscale(0%); /* Restore color on hover */
+}
+
+/* Slider Counter */
 .slider-counter {
   position: absolute;
   bottom: 20px;
@@ -219,21 +236,184 @@ html, body {
   z-index: 3;
 }
 
+/* Progress Bar */
+.progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.3);
+  z-index: 3;
+}
+
+.progress {
+  height: 100%;
+  background-color: #fff;
+  transition: width 0.3s ease;
+}
+
+/* Fullscreen Button */
+.fullscreen-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 3;
+}
+
+/* Share Button */
+.share-button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: #1DA1F2; /* Professional blue color */
+  border: none;
+  color: white;
+  font-size: 1rem;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 3;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.share-button:hover {
+  background-color: #1991db; /* Darker blue on hover */
+}
+
+/* Skeleton Loader Styles */
+.skeleton-loader {
+  width: 90%;
+  max-width: 750px;
+  height: 550px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 60%;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-title {
+  width: 70%;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 20px 0;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-description {
+  width: 90%;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.2);
+  animation: shimmer 1.5s infinite;
+}
+
+/* Error Message */
+.error-message {
+  text-align: center;
+  color: red;
+  margin-top: 20px;
+}
+
+/* Swipe Indicator */
+.swipe-indicator {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  color: #fff;
+  z-index: 3;
+}
+
+.swipe-indicator span {
+  animation: swipe 1.5s infinite;
+}
+
+/* Collapsed Images Section */
+.collapsed-images {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px; /* Increased gap for better spacing */
+  z-index: 3;
+}
+
+.collapsed-image-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px; /* Gap between collapsed images */
+  max-width: 300px; /* Limit the width to prevent overflow */
+}
+
+.collapsed-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.collapsed-image:hover {
+  filter: grayscale(0%);
+}
+
+.swipe-arrow {
+  font-size: 2rem;
+  color: #fff;
+  animation: swipe 1.5s infinite;
+  margin-top: 10px; /* Added margin to separate from images */
+}
+
+/* Swipe Animation */
+@keyframes swipe {
+  0% { opacity: 0.6; transform: translateX(-10px); }
+  50% { opacity: 1; transform: translateX(10px); }
+  100% { opacity: 0.6; transform: translateX(-10px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Media Queries for Responsiveness */
 @media (max-width: 848px) {
-  .side-preview {
-    width: 15%; /* Smaller width for medium screens */
-    height: 20%; /* Smaller height for medium screens */
-    max-width: 150px; /* Limit maximum width */
-    max-height: 150px; /* Limit maximum height */
+  .gallery-title {
+    font-size: 2.5rem;
   }
 
-  .side-preview.left {
-    left: 5px; /* Move closer to the edge */
+  .arq-title {
+    font-size: 2.5rem;
   }
 
-  .side-preview.right {
-    right: 5px; /* Move closer to the edge */
+  .moments-title {
+    font-size: 1.5rem;
   }
 
   .card {
@@ -248,27 +428,47 @@ html, body {
   .card-content {
     height: 50%; /* Adjust content height */
   }
-}
 
-@media (max-width: 480px) {
+  .card-title {
+    font-size: 24px;
+  }
+
+  .card-description {
+    font-size: 16px;
+  }
+
   .side-preview {
-    width: 20%; /* Wider for very small screens */
-    height: 15%; /* Shorter for very small screens */
-    max-width: 100px; /* Limit maximum width */
-    max-height: 100px; /* Limit maximum height */
+    width: 15%;
+    height: 20%;
+    max-width: 150px;
+    max-height: 150px;
   }
 
   .side-preview.left {
-    left: 2px; /* Move even closer to the edge */
+    left: 5px;
   }
 
   .side-preview.right {
-    right: 2px; /* Move even closer to the edge */
+    right: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-title {
+    font-size: 2rem;
+  }
+
+  .arq-title {
+    font-size: 2rem;
+  }
+
+  .moments-title {
+    font-size: 1.2rem;
   }
 
   .card {
-    width: 90%; /* Wider card for very small screens */
-    min-height: 300px; /* Smaller height for very small screens */
+    width: 70%; /* Smaller card for small screens */
+    min-height: 300px; /* Smaller height for small screens */
   }
 
   .card-image {
@@ -280,25 +480,29 @@ html, body {
   }
 
   .card-title {
-    font-size: 20px; /* Smaller font size for very small screens */
+    font-size: 20px;
   }
 
   .card-description {
-    font-size: 14px; /* Smaller font size for very small screens */
+    font-size: 14px;
   }
-}
 
-.preview-image.grayscale {
-  filter: grayscale(100%);
-  transition: filter 0.3s ease;
-}
+  .side-preview {
+    width: 20%;
+    height: 15%;
+    max-width: 100px;
+    max-height: 100px;
+  }
 
-.no-images-message {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  font-size: 1.5rem;
-  color: #888;
-  text-align: center;
+  .side-preview.left {
+    left: 2px;
+  }
+
+  .side-preview.right {
+    right: 2px;
+  }
+
+  .slider-counter {
+    font-size: 16px;
+  }
 }
