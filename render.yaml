@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: event-gallery  # Change this to your project name
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: build
+    envVars:
+      - key: NODE_VERSION
+        value: 18  # Change this to your Node.js version if needed
