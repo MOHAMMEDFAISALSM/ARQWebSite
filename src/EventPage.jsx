@@ -228,48 +228,14 @@ const EventPage = () => {
 
       {/* Gallery Component */}
       <div className={styles.galleryContainer}>
-        {!showFinalText ? (
-          <motion.div
-            className={styles.rotatingWheel}
-            animate={{
-              rotate: [0, 360], // Rotate 360 degrees
-              scale: [1, 1.5, 2], // Grow in size
-              opacity: [1, 1, 0], // Fade out
-              filter: ["brightness(1)", "brightness(2)"], // Glow effect
-            }}
-            transition={{ duration: 5, ease: "easeInOut" }}
-          >
-            ARQ CLUB EVENTS
-            {/* Sparks */}
-            <motion.div
-              className={styles.spark}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-            />
-            <motion.div
-              className={styles.spark}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 1 }}
-            />
-            <motion.div
-              className={styles.spark}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 1.5 }}
-            />
-          </motion.div>
-        ) : (
-          <motion.div
-            className={styles.finalText}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1 }}
-          >
-            ARQ CLUB EVENTS
-          </motion.div>
-        )}
+        <motion.div
+          className={styles.finalText}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
+          ARQ CLUB EVENTS
+        </motion.div>
       </div>
 
       {/* ARQ Event Management Header */}

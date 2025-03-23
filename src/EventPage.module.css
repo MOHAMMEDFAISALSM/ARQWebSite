@@ -12,8 +12,8 @@
 /* Navigation */
 .navigation {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
@@ -23,6 +23,9 @@
   background: #333;
   padding: 10px;
   border-radius: 5px;
+  width: 100%; /* Ensure search bar takes full width */
+  max-width: 500px; /* Limit search bar width */
+  margin: 0 auto; /* Center the search bar */
 }
 
 .searchBar input {
@@ -37,6 +40,8 @@
 .tabs {
   display: flex;
   gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap; /* Allow tabs to wrap on smaller screens */
 }
 
 .tabs button {
@@ -60,7 +65,6 @@
   gap: 20px;
   justify-content: center;
 }
-
 /* Event Card */
 .eventCard {
   background: #1a1a1a;
@@ -75,8 +79,9 @@
 }
 
 .eventCard:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 6px 15px rgba(255, 255, 255, 0.2);
+  transform: scale(1.02); /* Light zoom effect */
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3); /* Light-up effect */
+  z-index: 1; /* Ensure the card stays above other content */
 }
 
 /* Event Image Container */
@@ -103,13 +108,13 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Add spacing between elements */
+  gap: 10px;
 }
 
 .eventTitle {
   font-size: 1.5rem;
   color: #fff;
-  margin: 0 0 10px 0; /* Add margin below the title */
+  margin: 0 0 10px 0;
   font-weight: bold;
   animation: slideInLeft 0.8s ease-out; /* Entrance animation */
 }
@@ -117,28 +122,28 @@
 .eventDetails {
   font-size: 1rem;
   color: #ccc;
-  margin: 0 0 10px 0; /* Add margin below the details */
+  margin: 0 0 10px 0;
   animation: slideInRight 0.8s ease-out; /* Entrance animation */
 }
 
 .eventDescription {
   font-size: 1rem;
   color: #ddd;
-  margin: 0 0 15px 0; /* Add margin below the description */
-  line-height: 1.5; /* Improve readability */
+  margin: 0 0 15px 0;
+  line-height: 1.5;
 }
 
 .eventTimer {
   font-size: 1rem;
   color: #fff;
-  margin: 0 0 10px 0; /* Add margin below the timer */
+  margin: 0 0 10px 0;
 }
 
 .eventStatus {
   font-size: 1rem;
   color: green;
   font-weight: bold;
-  margin: 0 0 10px 0; /* Add margin below the status */
+  margin: 0 0 10px 0;
 }
 
 .registerBtn {
@@ -150,7 +155,7 @@
   font-size: 1rem;
   font-weight: bold;
   transition: background 0.3s ease;
-  margin-top: 10px; /* Add margin above the button */
+  margin-top: 10px;
   animation: zoomIn 0.8s ease-out; /* Entrance animation */
 }
 
@@ -237,6 +242,7 @@
 
   .registerBtn {
     font-size: 0.9rem;
+    padding: 8px 16px;
   }
 }
 
@@ -351,48 +357,18 @@
 .flipTimer {
   animation: flip 1s ease-in-out infinite;
 }
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: black;
-  color: white;
-  font-size: 2rem;
-  font-weight: bold;
-}
 
-.rotatingWheel {
-  position: absolute;
-  font-size: 3rem;
-  text-shadow: 0px 0px 10px yellow;
+/* ARQ CLUB EVENTS - Centered and No Animation */
+.galleryContainer {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100px; /* Adjust height as needed */
+  margin-bottom: 20px;
 }
 
 .finalText {
-  font-size: 5rem;
-  text-shadow: 0px 0px 20px gold;
-}
-
-.spark {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background: yellow;
-  border-radius: 50%;
-  box-shadow: 0px 0px 10px yellow;
-  animation: sparkAnimation 1s infinite alternate;
-}
-
-@keyframes sparkAnimation {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.5);
-    opacity: 0.5;
-  }
+  font-size: 2.5rem; /* Adjust font size as needed */
+  text-shadow: 0px 0px 10px gold; /* Adjust text shadow as needed */
+  color: #fff; /* Adjust text color as needed */
 }
